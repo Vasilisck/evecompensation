@@ -5,53 +5,36 @@ import java.util.Date
 /**
   * Created by vasilisck on 6/27/17.
   */
-case class Killmail(solarSystem: SolarSystem,
-                    killID: Long,
-                    killTime: Date,
-                    attackers: List[Attacker],
-                    attackerCount: Int,
+case class Killmail(killmail_id: Long,
+                    killmail_time: Date,
                     victim: Victim,
-                    killID_str: String,
-                    attackerCount_str: String,
-                    war: War
-                   )
+                    attackers: List[Attacker],
+                    solar_system_id: Long)
 
-case class Attacker(alliance: ItemType,
-                    shipType: ItemType,
-                    corporation: ItemType,
-                    character: Character,
-                    damageDone: Long,
-                    damageDone_str: String,
-                    weaponType: ItemType,
-                    finalBlow: Boolean,
-                    securityStatus: Float)
+case class Attacker(security_status: Float,
+                    final_blow: Boolean,
+                    damage_done: Int,
+                    faction_id: Option[Long],
+                    character_id: Option[Long],
+                    corporation_id: Option[Long],
+                    alliance_id: Option[Long],
+                    ship_type_id: Long,
+                    weapon_type_id: Option[Long])
 
-case class Victim(alliance: ItemType,
-                  damageTaken: Long,
-                  damageTaken_str: String,
+case class Victim(damage_taken: Long,
+                  ship_type_id: Long,
+                  character_id: Long,
+                  corporation_id: Long,
+                  alliance_id: Long,
                   items: List[Item],
-                  character: ItemType,
-                  shipType: ItemType,
-                  corporation: ItemType,
                   position: Position
                  )
 
-case class Item(singleton: Long,
-                singleton_str: String,
-                itemType: ItemType,
-                flag: Long,
-                flag_str: String,
-                quantityDestroyed: Int = 0,
-                quantityDestroyed_str: String = "0",
-                quantityDropped: Int = 0,
-                quantityDropped_str: String = "0")
-
-case class ItemType(id: Long, id_str: String, href: String, name: String, icon: Icon)
-
-case class SolarSystem(id: Long, id_str: String, href: String, name: String)
+case class Item(item_type_id: Long,
+                singleton: Long,
+                flag: Int,
+                quantity_destroyed: Option[Int],
+                quantity_dropped: Option[Int])
 
 case class Position(x: Double, y: Double, z: Double)
 
-case class War(id: Long, id_str: String, href: String)
-
-case class Icon(href: String)
