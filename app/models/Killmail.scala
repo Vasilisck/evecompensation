@@ -41,10 +41,10 @@ case class Item(singleton: Long,
                 itemType: ItemType,
                 flag: Long,
                 flag_str: String,
-                quantityDestroyed: Int,
-                quantityDestroyed_str: String,
-                quantityDropped: Int,
-                quantityDropped_str: String,)
+                quantityDestroyed: Int = 0,
+                quantityDestroyed_str: String = "0",
+                quantityDropped: Int = 0,
+                quantityDropped_str: String = "0")
 
 case class ItemType(id: Long, id_str: String, href: String, name: String, icon: Icon)
 
