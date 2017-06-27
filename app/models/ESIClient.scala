@@ -34,6 +34,12 @@ class ESIClient @Inject()(ws: WSClient)(implicit context: ExecutionContext) {
   buffer.close()
   //end init
 
+  def getkillmailIdAndHashFromUrl(url: String): (String, String) = {
+    val parts: Array[String] = url.split("/")
+    val killmailIndex = parts.indexOf("killmails")
+    (parts(killmailIndex + 1), parts(killmailIndex + 2))
+  }
+
   def getKillmailByIdAndHash(killmailId: String, killmailHash: String): Future[Killmail] = {
     val request: WSRequest = makeRequest(killmailId, killmailHash)
     val response = request.get()
@@ -44,13 +50,13 @@ class ESIClient @Inject()(ws: WSClient)(implicit context: ExecutionContext) {
     killmail
   }
 
-  def checkResponse(response: WSResponse): Unit = {
+  private def checkResponse(response: WSResponse): Unit = {
     if (response.status != 200) {
       throw new Exception(s"code ${response.status}, ${response.body}")
     }
   }
 
-  def makeRequest(killmailId: String, killmailHash: String): WSRequest = {
+  private def makeRequest(killmailId: String, killmailHash: String): WSRequest = {
     ws
       .url(s"$killmailUrl/$killmailId/$killmailHash")
       .withQueryStringParameters(("datasource", "tranquility"))
