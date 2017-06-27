@@ -3,7 +3,7 @@ package models
 import javax.inject.Inject
 
 import play.api.libs.json.{Json, Reads}
-import play.api.libs.ws.{WSClient, WSRequest}
+import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
@@ -35,18 +35,25 @@ class ESIClient @Inject()(ws: WSClient)(implicit context: ExecutionContext) {
   //end init
 
   def getKillmailByIdAndHash(killmailId: String, killmailHash: String): Future[Killmail] = {
-    val request: WSRequest = ws
+    val request: WSRequest = makeRequest(killmailId, killmailHash)
+    val response = request.get()
+    val killmail = response.map(response => {
+      checkResponse(response)
+      response.json.as[Killmail]
+    })
+    killmail
+  }
+
+  def checkResponse(response: WSResponse): Unit = {
+    if (response.status != 200) {
+      throw new Exception(s"code ${response.status}, ${response.body}")
+    }
+  }
+
+  def makeRequest(killmailId: String, killmailHash: String): WSRequest = {
+    ws
       .url(s"$killmailUrl/$killmailId/$killmailHash")
       .withQueryStringParameters(("datasource", "tranquility"))
       .withHttpHeaders(("Accept", "application/json"))
-    val result = request.get().map(response => {
-      if(response.status == 200) {
-        val json = response.json
-        json.as[Killmail]
-      } else {
-        throw new Exception(s"code ${response.status}, ${response.body}")
-      }
-    })
-    result
   }
 }

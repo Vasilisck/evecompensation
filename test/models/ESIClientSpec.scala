@@ -23,6 +23,7 @@ class ESIClientSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
     "get killmails" in {
       val eSIClient = inject[ESIClient]
+      //hardcode actual kill of my rattlesnake. for a new one - ask somebody who play eve for kill link. Or take it from Zkillbord.com
       val result = Await.result(eSIClient.getKillmailByIdAndHash("63042503", "952d9b640424d10a2d2ef4ca57588ea6434c9a3c"), Duration.Inf)
       assertResult(38)(result.attackers.size)
     }
